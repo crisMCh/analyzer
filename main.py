@@ -55,6 +55,25 @@ def load_dicom_metadata_from_csv(csv_path):
                 dicom_metadata[tag] = value
     return dicom_metadata
 
+def dicom_to_hu(dicom_file, npy):
+    """
+    Converts a DICOM file to a Hounsfield Units (HU) numpy array.
+    """
+    # Load the DICOM file
+    dicom = pydicom.dcmread(dicom_file)
+
+    # Extract the raw pixel data
+    image = npy
+
+    # Get the Rescale Slope and Intercept for HU conversion
+    rescale_slope = getattr(dicom, "RescaleSlope", 1)
+    rescale_intercept = getattr(dicom, "RescaleIntercept", 0)
+
+    # Convert pixel values to Hounsfield Units (HU)
+    hu_image = image * rescale_slope + rescale_intercept
+
+
+    return hu_image
 
 def save_npy_as_dicom(npy_file, original_dicom_path, output_folder):
     """
@@ -72,13 +91,13 @@ def save_npy_as_dicom(npy_file, original_dicom_path, output_folder):
     np_array = np_array.astype(np.uint16)  # Adjust depending on your pixel data type
 
     # Create a new DICOM dataset
-    dicom_file = Dataset()
+    #dicom_file = Dataset()
 
     # Set pixel data (do this separately, do not overwrite later)
     original_dicom = pydicom.dcmread(original_dicom_path)
-    original_dicom.PixelData = np_array.tobytes()
+    #original_dicom.PixelData = dicom_to_hu(original_dicom_path, np_array).tobytes()
 
-    #dicom_file.PixelData = np_array.tobytes()
+    original_dicom.PixelData = np_array.tobytes()
 
 
 
@@ -95,11 +114,12 @@ def main():
     parser = argparse.ArgumentParser(description="Extract metadata from a DICOM file and save it as JSON.")
 
     #parameters for extracting metadata
+    #parser.add_argument("--original_dicom_path", type=str,  default='./original_dicom/abdo_pat1', help="Path to the original DICOM file.")
     parser.add_argument("--original_dicom_path", type=str,  default='./original_dicom/I0000002', help="Path to the original DICOM file.")
-    parser.add_argument("--output_metadata_path", type=str,  default='./original_dicom/metadata.csv', help="Path to save the extracted metadata as a JSON file.")
+    parser.add_argument("--output_metadata_path", type=str,  default='./original_dicom/metadataiViolin.csv', help="Path to save the extracted metadata as a JSON file.")
     
     #
-    parser.add_argument("--predictions_folder", type=str,  default='./predictions/EDCNN_i18000_n20000', help="Path to the prediction folder.")
+    parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/EDCNN_i18000_n20000', help="Path to the prediction folder.")
  
 
     
