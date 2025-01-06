@@ -306,8 +306,8 @@ def main():
     parser = argparse.ArgumentParser(description="Export and print")
 
     #window
-    parser.add_argument('--trunc_min', type=float, default=-160)#-160, -1000lung
-    parser.add_argument('--trunc_max', type=float, default=240)#240 #400lung, -24
+    parser.add_argument('--trunc_min', type=float, default=-1000)#-160, -1000lung
+    parser.add_argument('--trunc_max', type=float, default=400)#240 #400lung, -24
     parser.add_argument('--norm_range_min', type=float, default=-1024.0)
     parser.add_argument('--norm_range_max', type=float, default=1000.0)
     parser.add_argument('--diff_threshold', type=float, default=50)
@@ -322,7 +322,7 @@ def main():
 
     #Model
     parser.add_argument("--model", type=str,  default='UFormer', help="Model Name") #REDCNN,EDCNN, UFormer
-    parser.add_argument("--noise_level", type=int,  default=5000, help="")
+    parser.add_argument("--noise_level", type=int,  default=20000, help="")
 
     # Parse arguments
     args = parser.parse_args()
@@ -339,6 +339,9 @@ def main():
     #iviolin
     slicesi = ["prediction_0000.dcm","prediction_0001.dcm","prediction_0002.dcm", "prediction_0003.dcm", "prediction_0004.dcm", "prediction_0005.dcm", "prediction_0006.dcm", "prediction_0007.dcm", "prediction_0008.dcm"]
     originalsi = ["iviolin_abdo_pat1_target.npy","iviolin_abdo_pat2_target.npy","iviolin_thor_acc_pat1_target.npy", "iviolin_thor_acc_pat2_target.npy", "iviolin_thor_acc_pat3_target.npy", "iviolin_thor_acc_pat4_target.npy", "iviolin_thor_nacc_pat2_target.npy", "iviolin_thor_nacc_pat3_target.npy", "iviolin_thor_nacc_pat4_target.npy"]
+    
+    slicesi2 = ["prediction_0000.dcm","prediction_0002.dcm", "prediction_0004.dcm", "prediction_0006.dcm", ]
+    originalsi2 = ["iviolin_abdo_pat1_target.npy","iviolin_thor_acc_pat1_target.npy", "iviolin_thor_acc_pat3_target.npy", "iviolin_thor_nacc_pat2_target.npy"]
 
 
     models = ['REDCNN', 'EDCNN', 'Uformer','DUGAN']
@@ -347,8 +350,10 @@ def main():
 
     #show_interactive_plot(reconstructed_img, original_img, diff_img, args)
     #plot_comparison(slices, originals, models, args.images_dir, args)
-    for i in range(len(slicesi)):
-        plot_comparison_noises(slicesi[i], originalsi[i], models, noise_levels, args.images_dir, args)
+    #for i in range(len(slicesi)):
+        #plot_comparison_noises(slicesi[i], originalsi[i], models, noise_levels, args.images_dir, args)
+    
+    plot_comparison(slicesi2, originalsi2, models, args.images_dir, args)
 
     #plot_noise_simulation(slices, originals, noise_levels, args.images_dir, args)
 
