@@ -116,10 +116,11 @@ def main():
     #parameters for extracting metadata
     #parser.add_argument("--original_dicom_path", type=str,  default='./original_dicom/abdo_pat1', help="Path to the original DICOM file.")
     parser.add_argument("--original_dicom_path", type=str,  default='./original_dicom/I0000002', help="Path to the original DICOM file.")
-    parser.add_argument("--output_metadata_path", type=str,  default='./original_dicom/metadataiViolin.csv', help="Path to save the extracted metadata as a JSON file.")
+    parser.add_argument("--output_metadata_path", type=str,  default='./original_dicom/metadata.csv', help="Path to save the extracted metadata as a JSON file.")
     
     #
-    parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/EDCNN_i18000_n20000', help="Path to the prediction folder.")
+    #parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/EDCNN_i18000_n20000', help="Path to the prediction folder.")
+    parser.add_argument("--predictions_folder", type=str,  default='./predictions/DUGAN_i200_n5000', help="Path to the prediction folder.")
  
 
     
