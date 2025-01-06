@@ -262,8 +262,19 @@ def plot_comparison_noises(slice_file, original_file, models, noise_levels, imag
         axes[i, 1].axis('off')
 
         # Add noise level as a label to the left of each row (before first column)
-        axes[i, 0].annotate(f'{noise_level}', xy=(-0.15, 0.5), xycoords='axes fraction', 
-                            size=12, ha='right', va='center', rotation=90)
+        #axes[i, 0].annotate(f'{noise_level}', xy=(-0.15, 0.5), xycoords='axes fraction', 
+        #                   size=12, ha='right', va='center', rotation=90)
+
+        if noise_level == 20000:
+            axes[i, 0].annotate(f'Low noise', xy=(-0.15, 0.5), xycoords='axes fraction', size=12, ha='right', va='center', rotation=90)
+                            
+        elif noise_level == 10000:
+            axes[i, 0].annotate(f'Medium noise', xy=(-0.15, 0.5), xycoords='axes fraction', size=12, ha='right', va='center', rotation=90)
+
+        elif noise_level == 5000:
+            axes[i, 0].annotate(f'High noise', xy=(-0.15, 0.5), xycoords='axes fraction', size=12, ha='right', va='center', rotation=90)
+        else:
+            TypeError("No valid noise level!")
 
         for j, model in enumerate(models):
             dicom_folder = dicom_path(args.predictions_path, model, noise_level)
@@ -283,7 +294,7 @@ def plot_comparison_noises(slice_file, original_file, models, noise_levels, imag
             save_name = f"{os.path.splitext(slice_file)[0]}.png"
             save_full_path = os.path.join(save_path, save_name)
             fig.savefig(save_full_path, bbox_inches='tight')
-            print(f"Plot saved at: {save_full_path}")
+    print(f"Plot saved at: {save_full_path}")
         
 
     #plt.show()
@@ -295,8 +306,8 @@ def main():
     parser = argparse.ArgumentParser(description="Export and print")
 
     #window
-    parser.add_argument('--trunc_min', type=float, default=-1000)#-160, -1000lung
-    parser.add_argument('--trunc_max', type=float, default=400)#240 #400lung, -24
+    parser.add_argument('--trunc_min', type=float, default=-160)#-160, -1000lung
+    parser.add_argument('--trunc_max', type=float, default=240)#240 #400lung, -24
     parser.add_argument('--norm_range_min', type=float, default=-1024.0)
     parser.add_argument('--norm_range_max', type=float, default=1000.0)
     parser.add_argument('--diff_threshold', type=float, default=50)
@@ -320,21 +331,21 @@ def main():
 
     
 
-    slices = ["prediction_0056.dcm","prediction_0091.dcm", "prediction_0123.dcm"]
-    #slices = ["prediction_0056.dcm","prediction_0024.dcm","prediction_0091.dcm", "prediction_0123.dcm"]
-    originals = ["13094367_I00056_target.npy","13094367_I00091_target.npy", "13094367_I00123_target.npy"]
-    #originals = ["13094367_I00056_target.npy","prediction_0024.dcm","13094367_I00091_target.npy", "13094367_I00123_target.npy"]
+    #slices = ["prediction_0056.dcm","prediction_0091.dcm", "prediction_0123.dcm"]
+    slices = ["prediction_0056.dcm","prediction_0024.dcm","prediction_0091.dcm", "prediction_0123.dcm"]
+    #originals = ["13094367_I00056_target.npy","13094367_I00091_target.npy", "13094367_I00123_target.npy"]
+    originals = ["13094367_I00056_target.npy","13094367_I00024_target.npy","13094367_I00091_target.npy", "13094367_I00123_target.npy"]
     models = ['REDCNN', 'EDCNN', 'Uformer','DUGAN']
     noise_levels=[20000,10000,5000]
 
 
     #show_interactive_plot(reconstructed_img, original_img, diff_img, args)
     #plot_comparison(slices, originals, models, args.images_dir, args)
-    #plot_comparison_noises(slices[0], originals[0], models, noise_levels, args.images_dir, args)
-    #plot_comparison_noises(slices[1], originals[1], models, noise_levels, args.images_dir, args)
-    #plot_comparison_noises(slices[2], originals[2], models, noise_levels, args.images_dir, args)
-    #plot_comparison_noises(slices[3], originals[3], models, noise_levels, args.images_dir, args)
-    plot_noise_simulation(slices, originals, noise_levels, args.images_dir, args)
+    plot_comparison_noises(slices[0], originals[0], models, noise_levels, args.images_dir, args)
+    plot_comparison_noises(slices[1], originals[1], models, noise_levels, args.images_dir, args)
+    plot_comparison_noises(slices[2], originals[2], models, noise_levels, args.images_dir, args)
+    plot_comparison_noises(slices[3], originals[3], models, noise_levels, args.images_dir, args)
+    #plot_noise_simulation(slices, originals, noise_levels, args.images_dir, args)
 
 
     #visualize_differences_with_threshold(original_img, reconstructed_img, )
