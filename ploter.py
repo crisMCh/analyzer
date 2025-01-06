@@ -314,9 +314,9 @@ def main():
 
 
     #paths
-    parser.add_argument("--predictions_path", type=str,  default='./predictions', help="Path to ")
-    parser.add_argument("--output_figs_path", type=str,  default='./figs/dug', help="Path to save the plots.")
-    parser.add_argument('--images_dir', type=str, default='G:/Cristina/Thesis/Models/Uformer/dataset/lung/test', help='Directory of test data, used to retireve full dose and low doses')
+    parser.add_argument("--predictions_path", type=str,  default='./predictions/iviolin', help="Path to ")
+    parser.add_argument("--output_figs_path", type=str,  default='./figs/iviolin', help="Path to save the plots.")
+    parser.add_argument('--images_dir', type=str, default='G:/Cristina/Thesis/Models/Uformer/dataset/lung/testi', help='Directory of test data, used to retireve full dose and low doses')#testi for iviolin, test for own datset
     
    #---------------------------- need to rename files here ^^^^^^^^ done
 
@@ -335,16 +335,21 @@ def main():
     slices = ["prediction_0056.dcm","prediction_0024.dcm","prediction_0091.dcm", "prediction_0123.dcm"]
     #originals = ["13094367_I00056_target.npy","13094367_I00091_target.npy", "13094367_I00123_target.npy"]
     originals = ["13094367_I00056_target.npy","13094367_I00024_target.npy","13094367_I00091_target.npy", "13094367_I00123_target.npy"]
+
+    #iviolin
+    slicesi = ["prediction_0000.dcm","prediction_0001.dcm","prediction_0002.dcm", "prediction_0003.dcm", "prediction_0004.dcm", "prediction_0005.dcm", "prediction_0006.dcm", "prediction_0007.dcm", "prediction_0008.dcm"]
+    originalsi = ["iviolin_abdo_pat1_target.npy","iviolin_abdo_pat2_target.npy","iviolin_thor_acc_pat1_target.npy", "iviolin_thor_acc_pat2_target.npy", "iviolin_thor_acc_pat3_target.npy", "iviolin_thor_acc_pat4_target.npy", "iviolin_thor_nacc_pat2_target.npy", "iviolin_thor_nacc_pat3_target.npy", "iviolin_thor_nacc_pat4_target.npy"]
+
+
     models = ['REDCNN', 'EDCNN', 'Uformer','DUGAN']
     noise_levels=[20000,10000,5000]
 
 
     #show_interactive_plot(reconstructed_img, original_img, diff_img, args)
     #plot_comparison(slices, originals, models, args.images_dir, args)
-    plot_comparison_noises(slices[0], originals[0], models, noise_levels, args.images_dir, args)
-    plot_comparison_noises(slices[1], originals[1], models, noise_levels, args.images_dir, args)
-    plot_comparison_noises(slices[2], originals[2], models, noise_levels, args.images_dir, args)
-    plot_comparison_noises(slices[3], originals[3], models, noise_levels, args.images_dir, args)
+    for i in range(len(slicesi)):
+        plot_comparison_noises(slicesi[i], originalsi[i], models, noise_levels, args.images_dir, args)
+
     #plot_noise_simulation(slices, originals, noise_levels, args.images_dir, args)
 
 

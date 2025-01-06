@@ -120,7 +120,7 @@ def main():
     
     #
     #parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/EDCNN_i18000_n20000', help="Path to the prediction folder.")
-    parser.add_argument("--predictions_folder", type=str,  default='./predictions/DUGAN_i200_n5000', help="Path to the prediction folder.")
+    parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/DUGAN_i200_n20000', help="Path to the prediction folder.")
  
 
     
