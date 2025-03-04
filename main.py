@@ -5,6 +5,7 @@ import numpy as np
 from pydicom.dataset import Dataset
 import os
 import csv
+import matplotlib.pyplot as plt
 import ast
 
 def extract_dicom_metadata(original_dicom_path, output_metadata_path):
@@ -75,6 +76,19 @@ def dicom_to_hu(dicom_file, npy):
 
     return hu_image
 
+def denormalize_hu(normalized_image, min_hu=-1000, max_hu=1000):
+    # Ensure the input is a NumPy array
+    if not isinstance(normalized_image, np.ndarray):
+        raise ValueError("Input must be a NumPy array")
+    
+    # Check that the normalized values are within [0, 1]
+    normalized_image = np.clip(normalized_image, 0, 1)
+        
+    # Denormalize the image to HU
+    hu_image = normalized_image * (max_hu - min_hu) + min_hu
+    
+    return hu_image
+
 def save_npy_as_dicom(npy_file, original_dicom_path, output_folder):
     """
     Converts a .npy file to a DICOM file and adds the metadata.
@@ -86,10 +100,19 @@ def save_npy_as_dicom(npy_file, original_dicom_path, output_folder):
     """
     # Load the numpy array
     np_array = np.load(npy_file)
+    if np_array.min() >= 0 and np_array.max() <= 1:
+        np_array = denormalize_hu(np_array)
     
+    np_array = denormalize_hu(np_array)
     # Ensure the numpy array is of type that DICOM expects (usually unsigned int16 or float32)
+    
     np_array = np_array.astype(np.uint16)  # Adjust depending on your pixel data type
-
+    
+    # Plot the numpy array in grayscale
+    #plt.imshow(np_array, cmap='gray')
+    #plt.title(f"Preview of {npy_file}")
+    #plt.axis('off')  # Hide the axis
+    #plt.show()
     # Create a new DICOM dataset
     #dicom_file = Dataset()
 
@@ -119,8 +142,8 @@ def main():
     parser.add_argument("--output_metadata_path", type=str,  default='./original_dicom/metadata.csv', help="Path to save the extracted metadata as a JSON file.")
     
     #
-    #parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/EDCNN_i18000_n20000', help="Path to the prediction folder.")
-    parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/DUGAN_i200_n20000', help="Path to the prediction folder.")
+    parser.add_argument("--predictions_folder", type=str,  default='./predictions/iviolin/original', help="Path to the prediction folder.")
+    #parser.add_argument("--predictions_folder", type=str,  default='./predictions/40000', help="Path to the prediction folder.")
  
 
     
@@ -138,10 +161,22 @@ def main():
     output_folder = os.path.join(args.predictions_folder, 'dcm')
          # Ensure the output folder exists
     os.makedirs(output_folder, exist_ok=True)
+    
 
     for npy_file in os.listdir(predictions_npy):
         if npy_file.endswith(".npy"):
             npy_file_path = os.path.join(predictions_npy, npy_file)
+            
+
+            # Load the numpy array
+            npy_array = np.load(npy_file_path)
+
+            # Plot the numpy array in grayscale
+            #plt.imshow(npy_array, cmap='gray')
+            #plt.title(f"Preview of {npy_file}")
+            #plt.axis('off')  # Hide the axis
+            #plt.show()
+            
             save_npy_as_dicom(npy_file_path, args.original_dicom_path, output_folder)
 
 if __name__ == "__main__":

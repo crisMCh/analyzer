@@ -1,1 +1,9 @@
 predictions/
+figs/
+figs/dug/
+
+figs/sl24_lung.png
+figs/dug/10k_lung.png
+figs/iviolin/5k_lung.png
+iviolin/mtf_10k.png
+iviolin/Original.png
